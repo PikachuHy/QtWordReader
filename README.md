@@ -1,1 +1,2 @@
-"# QtWordReader" 
+# QtWordReader
+
