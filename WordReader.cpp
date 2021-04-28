@@ -25,18 +25,18 @@ QString WordReader::readAll() {
     reader.addData(zipReader.fileData("word/document.xml"));
     while (!reader.atEnd()) {
         if (reader.isStartElement()) {
-            if (reader.name() == "p") {
+            if (reader.name() == QString("p")) {
                 // count++;
                 // ret += QString::number(count);
                 // ret += ". ";
             }
-            if (reader.name() == "t") {
+            if (reader.name() == QString("t")) {
                 ret += reader.readElementText();
                 // ret += '\n';
             }
         }
         if (reader.isEndElement()) {
-            if (reader.name() == "p") {
+            if (reader.name() == QString("p")) {
                 ret += '\n';
             }
         }
