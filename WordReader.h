@@ -4,8 +4,9 @@
 
 #ifndef MYNOTES_WORDREADER_H
 #define MYNOTES_WORDREADER_H
+#include "QtWordReader_global.h"
 #include <QString>
-class WordReader {
+class QTWORDREADERSHARED_EXPORT WordReader {
 public:
     explicit WordReader(const QString& path);
     QString readAll();
