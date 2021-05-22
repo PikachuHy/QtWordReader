@@ -2,37 +2,34 @@ cmake_minimum_required(VERSION 3.5)
 
 project(QtWordReader LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
-if(MSVC)
+if (MSVC)
     add_compile_options("/utf-8")
-endif()
+endif ()
+if (ANDROID)
+    set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/android-build/libs/${CMAKE_ANDROID_ARCH_ABI}/)
+    set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/android-build/libs/${CMAKE_ANDROID_ARCH_ABI}/)
+endif ()
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS
         Core Gui
         REQUIRED)
 
-
-set(PROJECT_SOURCES
+add_library(QtWordReader SHARED
         WordReader.cpp WordReader.h
         )
-
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    add_library(QtWordReader ${PROJECT_SOURCES})
-else()
-    if(ANDROID)
-        add_library(MyNotes SHARED
-            ${PROJECT_SOURCES}
-        )
-    else()
-        add_library(QtWordReader ${PROJECT_SOURCES})
-    endif()
-
-endif()
+target_compile_definitions(QtWordReader PRIVATE -DQtWordReader_LIBRARY)
 target_include_directories(QtWordReader INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(QtWordReader PRIVATE
+target_link_libraries(QtWordReader PUBLIC
         Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::GuiPrivate
         )
-add_executable(WordReader main.cpp)
+qt_add_executable(WordReader
+        MANUAL_FINALIZATION
+        main.cpp
+        )
 target_link_libraries(WordReader PRIVATE
-        Qt${QT_VERSION_MAJOR}::Core
-        QtWordReader)
+        QtWordReader
+        )
+if (QT_VERSION_MAJOR EQUAL 6)
+    qt_finalize_executable(WordReader)
+endif ()
